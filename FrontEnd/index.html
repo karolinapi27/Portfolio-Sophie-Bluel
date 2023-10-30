@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <title>Sophie Bluel - Architecte d'intérieur</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/c81d32db57.js"
+      crossorigin="anonymous"
+    ></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,14 +17,30 @@
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
+
   <body>
+    <!-- En-tête pour le mode édition -->
+    <section class="modeEdition">
+      <i class="fa-regular fa-pen-to-square right"></i>
+      <p>Mode édition</p>
+    </section>
+
+    <!-- Fenêtre Modale -->
+    <dialog id="modal">
+      <i onclick="closeDialog()" class="fa-solid fa-xmark x-position"></i>
+      <h3>Galerie photo</h3>
+      <form class="modalContent"></form>
+      <div class="line"></div>
+      <input class="modalBtn" type="submit" value="Ajouter une photo" />
+    </dialog>
+    <!-------------------------------------->
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
         <ul>
           <li>projets</li>
           <li>contact</li>
-          <li><a href="./login.html">login</a></li>
+          <li><a id="loginItem" href="./login.html">login</a></li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
       </nav>
@@ -50,7 +70,18 @@
         </article>
       </section>
       <section id="portfolio">
-        <h2>Mes Projets</h2>
+        <div class="flex">
+          <h2>Mes Projets</h2>
+          <!-- Bouton pour ouvrir la modale -->
+          <a
+            id="btnModifier"
+            href="#modal"
+            class="position"
+            onclick="openDialog()"
+            ><i class="fa-regular fa-pen-to-square right"></i>modifier</a
+          >
+        </div>
+        <!-- Filtres pour trier les projets -->
         <div id="filtersContainer"></div>
         <div class="gallery">
           <figure>
@@ -151,6 +182,7 @@
         </ul>
       </nav>
     </footer>
+    <script src="js/login.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

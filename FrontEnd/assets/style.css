@@ -176,7 +176,6 @@ nav li {
   cursor: pointer;
   font-weight: 400;
 }
-
 li:hover {
   font-weight: 600;
 }
@@ -294,23 +293,26 @@ footer nav ul {
   padding-left: 15px;
   padding-right: 15px;
   border: 1px solid #1d6154;
+  cursor: pointer;
 }
 
-.filter-button:hover {
+.filter-button.clicked {
   color: white;
   background-color: #1d6154;
 }
 
 #filtersContainer {
   text-align: center;
+  padding-bottom: 15px;
 }
 
-/***** CSS de la fenêtre modale *****/
+/***** CSS de la fenêtre modale 1 *****/
 
 .flex {
   display: flex;
   justify-content: center;
   gap: 25px;
+  padding-top: 50px;
 }
 
 .position {
@@ -334,6 +336,7 @@ footer nav ul {
 .x-position {
   position: absolute;
   right: 15px;
+  top: 15px;
   cursor: pointer;
   font-size: 24px;
 }
@@ -354,8 +357,8 @@ dialog h3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
-  grid-row-gap: 20px;
-  margin: 30px 50px 50px 50px;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .modalContent img {
@@ -389,18 +392,116 @@ dialog h3 {
   margin: 0 auto;
 }
 
-.modalBtn {
+.customModalBtn.modalBtn {
   display: flex;
   justify-content: center;
   height: 36px;
   width: 237px;
   border: 1px solid #1d6154;
+  margin-top: auto;
+}
+
+/***** CSS de la fenêtre modale 2 *****/
+
+#modal2 {
+  width: 630px;
+  height: 688px;
+  border-radius: 10px;
+  background: #fff;
+  border: #fff;
+  box-sizing: border-box;
+}
+
+#modal2 svg {
+  padding-left: 50px;
+}
+
+.modal2-arrow {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.fileContainer {
+  width: 420px;
+  height: 169px;
+  display: grid;
+  justify-content: center;
+  background-color: #e8f1f6;
+  margin-top: 35px;
+  border-radius: 3px;
+}
+
+#custom-file-btn {
+  width: 173px;
+  height: 36px;
+  border-radius: 50px;
+  background: #cbd6dc;
+}
+
+.inputContainer {
+  display: grid;
+  gap: 15px;
+}
+
+.custom-file-input {
+  display: grid;
+  width: 420px;
+  height: 51px;
+  background: #fff;
+  border: #fff;
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+}
+
+.custom-file-title {
+  color: #3d3d3d;
+}
+
+.formPosition {
+  align-content: center;
+  display: grid;
+  justify-content: center;
+  row-gap: 30px;
+}
+
+.file-description {
+  text-align: center;
+  color: #444;
+  text-align: center;
+  font-family: Work Sans;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+input[type="file"] {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.fileAjouterPhoto {
+  width: 173px;
+  height: 36px;
+  border-radius: 50px;
+  background: #cbd6dc;
+  color: #306685;
+  text-align: center;
+  line-height: 36px;
+  cursor: pointer;
+}
+
+#previewImage {
+  width: 129px;
+  height: 169px;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /****** CSS du mode edition ******/
-
 .modeEdition {
-  display: flex;
   justify-content: center;
   align-items: center;
   color: white;
@@ -408,4 +509,7 @@ dialog h3 {
   height: 59px;
   width: 100%;
   margin: 0;
+}
+.edition-mode .modeEdition {
+  width: 100%;
 }

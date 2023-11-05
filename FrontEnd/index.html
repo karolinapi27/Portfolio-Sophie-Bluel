@@ -27,13 +27,92 @@
 
     <!-- Fenêtre Modale -->
     <dialog id="modal">
-      <i onclick="closeDialog()" class="fa-solid fa-xmark x-position"></i>
-      <h3>Galerie photo</h3>
-      <form class="modalContent"></form>
-      <div class="line"></div>
-      <input class="modalBtn" type="submit" value="Ajouter une photo" />
+      <div id="modal1">
+        <i onclick="closeDialog()" class="fa-solid fa-xmark x-position"></i>
+        <h3>Galerie photo</h3>
+        <form class="modalContent"></form>
+
+        <div class="line"></div>
+        <input
+          onclick="openDialog2()"
+          class="modalBtn customModalBtn"
+          type="submit"
+          value="Ajouter une photo"
+        />
+      </div>
+
+      <!--Code pour l'ajout de photo-->
+
+      <div id="modal2" style="display: none">
+        <i class="fa fa-arrow-left modal2-arrow"></i>
+        <i onclick="closeDialog()" class="fa-solid fa-xmark x-position"></i>
+
+        <h3>Ajout photo</h3>
+
+        <form
+          id="imageUploadform"
+          class="formPosition"
+          action="/traitement-du-formulaire"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <label for="file" class="fileContainer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="76"
+              height="76"
+              viewBox="0 0 76 76"
+              fill="none"
+            >
+              <path
+                d="M63.5517 15.8879C64.7228 15.8879 65.681 16.8461 65.681 18.0172V60.5768L65.0156 59.7118L46.9165 36.2894C46.3176 35.5042 45.3727 35.0517 44.3879 35.0517C43.4031 35.0517 42.4715 35.5042 41.8594 36.2894L30.8136 50.5824L26.7546 44.8998C26.1557 44.0614 25.1975 43.569 24.1595 43.569C23.1214 43.569 22.1632 44.0614 21.5644 44.9131L10.9178 59.8183L10.319 60.6434V60.6034V18.0172C10.319 16.8461 11.2772 15.8879 12.4483 15.8879H63.5517ZM12.4483 9.5C7.75048 9.5 3.93103 13.3195 3.93103 18.0172V60.6034C3.93103 65.3012 7.75048 69.1207 12.4483 69.1207H63.5517C68.2495 69.1207 72.069 65.3012 72.069 60.6034V18.0172C72.069 13.3195 68.2495 9.5 63.5517 9.5H12.4483ZM23.0948 35.0517C23.9337 35.0517 24.7644 34.8865 25.5394 34.5655C26.3144 34.2444 27.0186 33.7739 27.6118 33.1807C28.2049 32.5876 28.6755 31.8834 28.9965 31.1083C29.3175 30.3333 29.4828 29.5027 29.4828 28.6638C29.4828 27.8249 29.3175 26.9943 28.9965 26.2192C28.6755 25.4442 28.2049 24.74 27.6118 24.1468C27.0186 23.5537 26.3144 23.0831 25.5394 22.7621C24.7644 22.4411 23.9337 22.2759 23.0948 22.2759C22.2559 22.2759 21.4253 22.4411 20.6503 22.7621C19.8752 23.0831 19.171 23.5537 18.5779 24.1468C17.9847 24.74 17.5142 25.4442 17.1931 26.2192C16.8721 26.9943 16.7069 27.8249 16.7069 28.6638C16.7069 29.5027 16.8721 30.3333 17.1931 31.1083C17.5142 31.8834 17.9847 32.5876 18.5779 33.1807C19.171 33.7739 19.8752 34.2444 20.6503 34.5655C21.4253 34.8865 22.2559 35.0517 23.0948 35.0517Z"
+                fill="#B9C5CC"
+              />
+            </svg>
+
+            <input type="file" id="file" name="file" />
+            <span class="fileAjouterPhoto">+ Ajouter photo</span>
+            <span class="file-description">jpg, png : 4Mo max</span>
+            <img id="previewImage" src="#" alt="Aperçu de l'image" />
+          </label>
+
+          <!-- Champ de titre -->
+          <div class="inputContainer">
+            <label class="custom-file-title" for="titre">Titre</label>
+            <input
+              class="custom-file-input"
+              type="text"
+              id="titre"
+              name="titre"
+              required
+            />
+
+            <!-- Champ de catégorie -->
+            <label class="custom-file-title" for="categorie">Catégorie</label>
+            <select
+              class="custom-file-input"
+              id="categorie"
+              name="categorie"
+              required
+            >
+              <option value="" disabled selected hidden>
+                Choisissez une catégorie
+              </option>
+              <option value="1">Objets</option>
+              <option value="2">Appartements</option>
+              <option value="3">Hôtel&restaurants</option>
+            </select>
+          </div>
+          <div class="line"></div>
+          <input
+            class="modalBtn customModalBtn"
+            type="submit"
+            value="Valider"
+          />
+        </form>
+      </div>
     </dialog>
-    <!-------------------------------------->
+
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
@@ -75,7 +154,7 @@
           <!-- Bouton pour ouvrir la modale -->
           <a
             id="btnModifier"
-            href="#modal"
+            href="#modal1"
             class="position"
             onclick="openDialog()"
             ><i class="fa-regular fa-pen-to-square right"></i>modifier</a
@@ -83,82 +162,7 @@
         </div>
         <!-- Filtres pour trier les projets -->
         <div id="filtersContainer"></div>
-        <div class="gallery">
-          <figure>
-            <img src="assets/images/abajour-tahina.png" alt="Abajour Tahina" />
-            <figcaption>Abajour Tahina</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/appartement-paris-v.png"
-              alt="Appartement Paris V"
-            />
-            <figcaption>Appartement Paris V</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/restaurant-sushisen-londres.png"
-              alt="Restaurant Sushisen - Londres"
-            />
-            <figcaption>Restaurant Sushisen - Londres</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/la-balisiere.png"
-              alt="Villa “La Balisiere” - Port Louis"
-            />
-            <figcaption>Villa “La Balisiere” - Port Louis</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/structures-thermopolis.png"
-              alt="Structures Thermopolis"
-            />
-            <figcaption>Structures Thermopolis</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/appartement-paris-x.png"
-              alt="Appartement Paris X"
-            />
-            <figcaption>Appartement Paris X</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/le-coteau-cassis.png"
-              alt="Pavillon “Le coteau” - Cassis"
-            />
-            <figcaption>Pavillon “Le coteau” - Cassis</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/villa-ferneze.png"
-              alt="Villa Ferneze - Isola d’Elba"
-            />
-            <figcaption>Villa Ferneze - Isola d’Elba</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/appartement-paris-xviii.png"
-              alt="Appartement Paris XVIII"
-            />
-            <figcaption>Appartement Paris XVIII</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/bar-lullaby-paris.png"
-              alt="Bar “Lullaby” - Paris"
-            />
-            <figcaption>Bar “Lullaby” - Paris</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="assets/images/hotel-first-arte-new-delhi.png"
-              alt="Hotel First Arte - New Delhi"
-            />
-            <figcaption>Hotel First Arte - New Delhi</figcaption>
-          </figure>
-        </div>
+        <div class="gallery"></div>
       </section>
       <section id="contact">
         <h2>Contact</h2>

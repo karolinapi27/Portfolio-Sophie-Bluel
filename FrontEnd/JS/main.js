@@ -1,5 +1,6 @@
-  let categories;
-  let projets;
+let categories;
+let projets;
+const token = localStorage.getItem('token');
 
   // Fonction pour récupérer les projets
   async function recupererProjets() {
@@ -10,6 +11,9 @@
       }
       // Conversion de la réponse JSON
       projets = await reponse.json();
+
+      // Afficher les projets dans la gallerie
+      afficherProjetsDansGalerie(projets)
 
       //fonction pour récupérer les catégories
       await recupererCategories();
@@ -79,8 +83,10 @@
       console.log("Filtrer par catégorie :", categorie);
     }
     
+    // Fonction pour créer les filtres // 
     function creerFiltres() {
      let filtersContainer = document.getElementById('filtersContainer');
+
       // Set pour éviter les doublons
       const categoriesSet = new Set();
 
@@ -89,7 +95,8 @@
         if (projet.category && projet.category.name) {
           categoriesSet.add(projet.category.name);
         }
-      });
+        });
+
     // Boutons de filtre pour chaque catégorie
       categoriesSet.forEach(categorie => {
         const bouton = document.createElement('button');
@@ -98,7 +105,23 @@
         bouton.addEventListener('click', () => filtrerParCategorie(categorie));
         filtersContainer.appendChild(bouton);
         console.log ("Bouton cliqué");
-      });
+      }); 
+
+    // Ajoutez un gestionnaire d'événements de clic à chaque filtre
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => toggleButtonColor(button));
+        });
+
+        // Fonction pour le changement de couleur du bouton
+        function toggleButtonColor(clickedButton) {
+          filterButtons.forEach(button => {
+            button.classList.remove('clicked');
+          });
+
+          clickedButton.classList.toggle('clicked');
+        }
+
     }
 
     // Ajoute manuellement le bouton "Tous"
@@ -108,14 +131,58 @@
     boutonTous.onclick = afficherTousLesTravaux;
     filtersContainer.appendChild(boutonTous);
 
+    // Fonction pour afficher tous les travaux 
     function afficherTousLesTravaux() {
       // Afficher tous les projets dans la galerie
       afficherProjetsDansGalerie(projets);
       console.log("Afficher tous les travaux");
     }
     
-  // ----------------------------------------------------------------
-  // Code de la Modale //
+  // ---------------------------------------------------------------- //
+// Fonction pour ouvrir la modale 1
+const dialog = document.getElementById('modal');
+
+function openDialog() {  
+  dialog.showModal(); 
+  afficherProjetsDansModal(projets);
+  closeDialog2();
+}
+  
+// Fonction pour fermer la modale 
+function closeDialog() {
+  dialog.close();
+}
+
+// Code de la Modale 2 pour l'ajout de photo  //
+const btnAjouterUnePhoto = document.querySelector('.modalBtn');
+
+btnAjouterUnePhoto.addEventListener('click',() => { 
+
+  const modal1 = document.getElementById('modal1');
+  modal1.style.display = 'none';  
+  openDialog2();
+});
+
+// Fonction pour ouvrir la deuxième partie de la modale
+
+function openDialog2() {
+  const modal2 = document.getElementById('modal2');
+  modal2.style.display = 'block';
+}
+function closeDialog2(){
+  document.getElementById('modal1').style.display = 'block';
+  document.getElementById('modal2').style.display = 'none';
+};
+
+// Fonction pour retourner sur la suppression de photo
+const arrowLeft = document.querySelector('.modal2-arrow');
+
+arrowLeft.addEventListener('click',() => { 
+  document.getElementById('modal1').style.display = 'block';
+  document.getElementById('modal2').style.display = 'none';
+});
+
+  // Code de la Modale pour supprimer des projets //
 
     function afficherProjetsDansModal(projets) {
       const modalContent = document.querySelector('.modalContent');
@@ -146,23 +213,7 @@
       });
       };
 
-
-  // Fonction pour ouvrir la modale
-  function openDialog() {
-    const dialog = document.getElementById('modal');
-    dialog.showModal(); 
-    afficherProjetsDansModal(projets);
-  }
-    
-  // Fonction pour fermer la modale
-  function closeDialog() {
-    const dialog = document.getElementById('modal');
-    dialog.close();
-  }
-
   // Fonction pour supprimer un projet
-
-    const token = localStorage.getItem('token');
 
     async function deleteProjet(idProjet) {
       try {
@@ -190,23 +241,77 @@
       }
     }
 
+  // ---------------------------------------------------------------- /
+
+// Code pour l'ajout de photo // 
+
+const imageUploadform = document.getElementById('imageUploadform');
+
+imageUploadform.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const fileInputElement = document.getElementById('file');
+
+  // Récupère les valeurs du formulaire
+  const titre = document.getElementById('titre').value;
+  const categorie = document.getElementById('categorie').value;
+  
+  const formData = new FormData(imageUploadform);
+  console.log(formData);
+
+  // Ajoute les champs du formulaireformData.append('image', fileInputElement.files[0]);  // Remplace fileInputElement par le véritable élément input de type file
+  //formData.append('title', titre);
+  //formData.append('category', categorie);////
 
 
+  fetch('http://localhost:5678/api/works', {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Authorization':`Bearer ${token}`,           
+    },
+    body: JSON.stringify(formData)
+    })  
 
-    
+    .then(function (response){
+        if (response.ok){
+            closeModal2();
+            alert('Données envoyées');
+            return response.json();
+        } else {
+          console.error(response);
+            throw new Error (`Réponse négative du serveur`);
+        }
+    })
+    .then(function (data) {
+      projets.push(data);  // Utilise la variable de projets de ton code
+      afficherProjetsDansGalerie(projets);  
+    })
+    .catch(error => console.log(error));      
+});
 
 
+// Fonction pour prévisualiser l'image // 
+function previewPicture(fileInputElement) {
+  const preview = document.getElementById('previewImage');
 
+  fileInputElement.addEventListener('change', function () {
+    const file = fileInputElement.files[0];
 
+    if (file) {
+      const reader = new FileReader();
 
-    
+      reader.onload = function (e) {
+        // Afficher l'image prévisualisée en remplaçant l'attribut src de l'élément img
+        preview.src = e.target.result;
+      };
 
-    
+      // Lire le fichier en tant que data URL
+      reader.readAsDataURL(file);
+    }
+  });
+}
 
-
-
-    
-
-    
-
-      
+// Appelle la fonction avec le bon élément input file
+const fileInputElement = document.getElementById('file');
+previewPicture(fileInputElement);

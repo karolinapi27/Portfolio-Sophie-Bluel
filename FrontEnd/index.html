@@ -20,10 +20,10 @@
 
   <body>
     <!-- En-tête pour le mode édition -->
-    <section class="modeEdition">
+    <aside id="modeEdition">
       <i class="fa-regular fa-pen-to-square right"></i>
       <p>Mode édition</p>
-    </section>
+    </aside>
 
     <!-- Fenêtre Modale -->
     <dialog id="modal">
@@ -70,10 +70,15 @@
               />
             </svg>
 
-            <input type="file" id="file" name="file" />
+            <input type="file" id="file" name="image" />
             <span class="fileAjouterPhoto">+ Ajouter photo</span>
             <span class="file-description">jpg, png : 4Mo max</span>
-            <img id="previewImage" src="#" alt="Aperçu de l'image" />
+            <img
+              id="previewImage"
+              src="#"
+              alt="Aperçu de l'image"
+              display="none"
+            />
           </label>
 
           <!-- Champ de titre -->
@@ -83,32 +88,29 @@
               class="custom-file-input"
               type="text"
               id="titre"
-              name="titre"
+              name="title"
               required
             />
+            <span id="errorTitre"></span>
 
             <!-- Champ de catégorie -->
             <label class="custom-file-title" for="categorie">Catégorie</label>
             <select
               class="custom-file-input"
               id="categorie"
-              name="categorie"
+              name="category"
               required
             >
-              <option value="" disabled selected hidden>
-                Choisissez une catégorie
-              </option>
-              <option value="1">Objets</option>
-              <option value="2">Appartements</option>
-              <option value="3">Hôtel&restaurants</option>
+              <option value="" disabled selected hidden>&nbsp;</option>
+              <option value="Objets">Objets</option>
+              <option value="Appartements">Appartements</option>
+              <option value="Hôtel&restaurants">Hôtel&restaurants</option>
+              <option value="Bar&restaurants">Bar & Restaurants</option>
             </select>
           </div>
+          <span id="errorCategorie"></span>
           <div class="line"></div>
-          <input
-            class="modalBtn customModalBtn"
-            type="submit"
-            value="Valider"
-          />
+          <input id="modalBtnColor" type="submit" value="Valider" />
         </form>
       </div>
     </dialog>

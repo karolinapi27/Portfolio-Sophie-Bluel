@@ -93,7 +93,6 @@ video {
 }
 /* HTML5 display-role reset for older browsers */
 article,
-aside,
 details,
 figcaption,
 figure,
@@ -135,11 +134,25 @@ body {
   font-size: 14px;
   background-color: #fffef8;
 }
+
+#modeEdition {
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: black;
+  height: 59px;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 header {
   display: flex;
   justify-content: space-between;
   margin: 50px 0;
 }
+
 section {
   margin: 50px 0;
 }
@@ -331,6 +344,11 @@ footer nav ul {
   background: #fff;
   border: #fff;
   box-sizing: border-box;
+  padding: 0;
+}
+
+#modal1 {
+  height: 100%;
 }
 
 .x-position {
@@ -393,8 +411,6 @@ dialog h3 {
 }
 
 .customModalBtn.modalBtn {
-  display: flex;
-  justify-content: center;
   height: 36px;
   width: 237px;
   border: 1px solid #1d6154;
@@ -417,8 +433,11 @@ dialog h3 {
 }
 
 .modal2-arrow {
+  position: absolute;
   font-size: 20px;
   cursor: pointer;
+  top: 15px;
+  left: 15px;
 }
 
 .fileContainer {
@@ -457,7 +476,6 @@ dialog h3 {
 }
 
 .formPosition {
-  align-content: center;
   display: grid;
   justify-content: center;
   row-gap: 30px;
@@ -500,16 +518,24 @@ input[type="file"] {
   transform: translateX(-50%);
 }
 
-/****** CSS du mode edition ******/
-.modeEdition {
-  justify-content: center;
-  align-items: center;
-  color: white;
-  background-color: black;
-  height: 59px;
-  width: 100%;
-  margin: 0;
+.btngreen {
+  background-color: #1d6154;
 }
-.edition-mode .modeEdition {
-  width: 100%;
+
+#modalBtnColor {
+  height: 36px;
+  width: 237px;
+  border: 1px solid #a7a7a7;
+  background-color: #a7a7a7;
+  margin-top: auto;
+}
+#errorTitre {
+  color: #b1663c;
+}
+#errorCategorie {
+  color: #b1663c;
+}
+
+.hidden {
+  display: none;
 }

@@ -11,8 +11,9 @@ const token = localStorage.getItem('token');
       }
       // Conversion de la réponse JSON
       projets = await reponse.json();
+      console.log(reponse);
 
-      // Afficher les projets dans la gallerie
+      // Affiche les projets dans la gallerie
       afficherProjetsDansGalerie(projets)
 
       //fonction pour récupérer les catégories
@@ -53,7 +54,7 @@ const token = localStorage.getItem('token');
 
       const gallerie = document.querySelector('.gallery');
 
-      // Supprimer les éléments existants de la galerie
+      // Supprime les éléments existants de la galerie
       gallerie.innerHTML = '';
     
       // Fonction pour ajouter dynamiquement les projets à la galerie
@@ -107,7 +108,7 @@ const token = localStorage.getItem('token');
         console.log ("Bouton cliqué");
       }); 
 
-    // Ajoutez un gestionnaire d'événements de clic à chaque filtre
+    // Ajoute un gestionnaire d'événements de clic à chaque filtre
         const filterButtons = document.querySelectorAll('.filter-button');
         filterButtons.forEach(button => {
           button.addEventListener('click', () => toggleButtonColor(button));
@@ -118,12 +119,10 @@ const token = localStorage.getItem('token');
           filterButtons.forEach(button => {
             button.classList.remove('clicked');
           });
-
           clickedButton.classList.toggle('clicked');
         }
 
     }
-
     // Ajoute manuellement le bouton "Tous"
     const boutonTous = document.createElement('button');
     boutonTous.textContent = 'Tous';
@@ -133,13 +132,14 @@ const token = localStorage.getItem('token');
 
     // Fonction pour afficher tous les travaux 
     function afficherTousLesTravaux() {
-      // Afficher tous les projets dans la galerie
+      // Affiche tous les projets dans la galerie
       afficherProjetsDansGalerie(projets);
       console.log("Afficher tous les travaux");
     }
     
   // ---------------------------------------------------------------- //
 // Fonction pour ouvrir la modale 1
+
 const dialog = document.getElementById('modal');
 
 function openDialog() {  
@@ -170,7 +170,7 @@ function openDialog2() {
   modal2.style.display = 'block';
 }
 function closeDialog2(){
-  document.getElementById('modal1').style.display = 'block';
+  document.getElementById('modal1').style.display = 'grid';
   document.getElementById('modal2').style.display = 'none';
 };
 
@@ -178,7 +178,7 @@ function closeDialog2(){
 const arrowLeft = document.querySelector('.modal2-arrow');
 
 arrowLeft.addEventListener('click',() => { 
-  document.getElementById('modal1').style.display = 'block';
+  document.getElementById('modal1').style.display = 'grid';
   document.getElementById('modal2').style.display = 'none';
 });
 
@@ -242,56 +242,97 @@ arrowLeft.addEventListener('click',() => {
     }
 
   // ---------------------------------------------------------------- /
-
 // Code pour l'ajout de photo // 
 
-const imageUploadform = document.getElementById('imageUploadform');
+const imageUploadform = document.getElementById("imageUploadform");
+const fileInputElement = document.getElementById('file');
+const titreInput = document.getElementById('titre');
+const categorieSelect = document.getElementById('categorie');
+const validerBtn = document.getElementById('modalBtnColor');
+
+const errorMessages = {
+  titre: document.getElementById('errorTitre'),
+  categorie: document.getElementById('errorCategorie'),
+};
+
+fileInputElement.addEventListener("input", validateForm);
+titreInput.addEventListener("input", validateForm);
+categorieSelect.addEventListener("input", validateForm);
+
+function validateForm() {
+  const isFileValid = validateFile();
+  const isTitleValid = validateField('titre', titreInput.value);
+  const isCategoryValid = validateField('categorie', categorieSelect.value);
+
+  const isFormValid = isFileValid && isTitleValid && isCategoryValid;
+
+  validerBtn.disabled = !isFormValid;
+
+  if (isFormValid) {
+    validerBtn.style.backgroundColor = '#1d6154';
+  } else {
+    validerBtn.style.backgroundColor = ''; 
+  }
+}
+
+function validateField(fieldName, value) {
+  const errorMessage = errorMessages[fieldName];
+  errorMessage.textContent = value.trim() === '' ? `Le champ de ${fieldName} est requis` : '';
+  return value.trim() !== '';
+}
+
+function validateFile() {
+  const maxSizeInBytes = 4 * 1024 * 1024; // 4MB
+  const validFormats = ['image/jpeg', 'image/png'];
+  const file = fileInputElement.files[0];
+
+  if (!file) {
+    return false;
+  }
+
+  if (!validFormats.includes(file.type)) {
+    alert('Le format de l\'image doit être JPG ou PNG.');
+    return false;
+  }
+
+  if (file.size > maxSizeInBytes) {
+    alert('La taille de l\'image ne doit pas dépasser 4 Mo.');
+    return false;
+  }
+
+  return true;
+}
 
 imageUploadform.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const fileInputElement = document.getElementById('file');
+    const formData = new FormData(imageUploadform);
 
-  // Récupère les valeurs du formulaire
-  const titre = document.getElementById('titre').value;
-  const categorie = document.getElementById('categorie').value;
-  
-  const formData = new FormData(imageUploadform);
-  console.log(formData);
-
-  // Ajoute les champs du formulaireformData.append('image', fileInputElement.files[0]);  // Remplace fileInputElement par le véritable élément input de type file
-  //formData.append('title', titre);
-  //formData.append('category', categorie);////
-
-
-  fetch('http://localhost:5678/api/works', {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Authorization':`Bearer ${token}`,           
-    },
-    body: JSON.stringify(formData)
-    })  
-
-    .then(function (response){
-        if (response.ok){
-            closeModal2();
-            alert('Données envoyées');
-            return response.json();
+    fetch('http://localhost:5678/api/works', {
+      method: "POST",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    })
+      .then(function (response) {
+        if (response.ok) {
+          alert('Données envoyées');
+          return response.json();
         } else {
           console.error(response);
-            throw new Error (`Réponse négative du serveur`);
+          throw new Error(`Réponse négative du serveur`);
         }
-    })
-    .then(function (data) {
-      projets.push(data);  // Utilise la variable de projets de ton code
-      afficherProjetsDansGalerie(projets);  
-    })
-    .catch(error => console.log(error));      
+      })
+      .then(function (data) {
+        projets.push(data);
+        afficherProjetsDansGalerie(projets);
+      })
+      .catch(error => console.log(error));
+  
 });
 
-
-// Fonction pour prévisualiser l'image // 
+// Fonction pour prévisualiser l'image
 function previewPicture(fileInputElement) {
   const preview = document.getElementById('previewImage');
 
@@ -302,16 +343,20 @@ function previewPicture(fileInputElement) {
       const reader = new FileReader();
 
       reader.onload = function (e) {
-        // Afficher l'image prévisualisée en remplaçant l'attribut src de l'élément img
+        // Affiche l'image prévisualisée en remplaçant l'attribut src de l'élément img
         preview.src = e.target.result;
       };
 
-      // Lire le fichier en tant que data URL
+      // Lit le fichier en tant que data URL
       reader.readAsDataURL(file);
+
+      // Affiche l'élément previewImage
+      preview.classList.remove('hidden');
+    } else {
+      // Masque l'élément previewImage s'il n'y a pas d'image
+      preview.classList.add('hidden');
     }
   });
 }
 
-// Appelle la fonction avec le bon élément input file
-const fileInputElement = document.getElementById('file');
 previewPicture(fileInputElement);

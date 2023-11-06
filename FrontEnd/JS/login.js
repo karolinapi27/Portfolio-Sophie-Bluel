@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Vérifie si le token est défini
         return token !== null;
     }
-        const modeEditionbar = document.querySelector('.modeEdition');
+        const modeEditionbar = document.getElementById('modeEdition');
         const loginButton = document.getElementById('loginItem');
         const filtersContainer = document.getElementById('filtersContainer');
         const btnModifier = document.getElementById('btnModifier');
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     async function modeEdition() {
-        const modeEditionbar = document.querySelector('.modeEdition');
+        const modeEditionbar = document.getElementById('modeEdition');
         const loginButton = document.getElementById('loginItem');
         const filtersContainer = document.getElementById('filtersContainer');
         const btnModifier = document.getElementById('btnModifier');

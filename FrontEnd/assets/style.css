@@ -518,10 +518,6 @@ input[type="file"] {
   transform: translateX(-50%);
 }
 
-.btngreen {
-  background-color: #1d6154;
-}
-
 #modalBtnColor {
   height: 36px;
   width: 237px;

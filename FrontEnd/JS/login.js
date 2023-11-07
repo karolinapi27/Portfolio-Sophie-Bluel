@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const filtersContainer = document.getElementById('filtersContainer');
         const btnModifier = document.getElementById('btnModifier');
         const modeEditionPadding = document.querySelector('.flex');
+        const modeEditionMargin = document.querySelector('.modeEditionMargin');
     
     
             modeEditionbar.style.display = Logged() ? 'flex' : 'none';
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filtersContainer.style.display = Logged() ? 'none' : 'block';
             btnModifier.style.display = Logged() ? 'block' : 'none';
             modeEditionPadding.style.paddingBottom = '30px';
+            modeEditionMargin.style.marginTop = '100px'
     
     }
 

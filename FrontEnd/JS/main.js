@@ -1,5 +1,6 @@
-let categories;
-let projets;
+let categories = [];
+let projets = [];
+
 const token = localStorage.getItem('token');
 
   // Fonction pour récupérer les projets
@@ -153,6 +154,16 @@ function closeDialog() {
   dialog.close();
 }
 
+// Fonction pour fermer la modale au clic en dehors de la fenêtre
+const modal = document.querySelector('dialog');
+
+modal.addEventListener('click', function(event) {
+ 
+  if (event.target === modal && modal.hasAttribute('open')) {
+      modal.close();
+  }
+});
+
 // Code de la Modale 2 pour l'ajout de photo  //
 const btnAjouterUnePhoto = document.querySelector('.modalBtn');
 
@@ -174,7 +185,7 @@ function closeDialog2(){
   document.getElementById('modal2').style.display = 'none';
 };
 
-// Fonction pour retourner sur la suppression de photo
+// Fonction pour retourner sur la suppression de photo "modal 1"
 const arrowLeft = document.querySelector('.modal2-arrow');
 
 arrowLeft.addEventListener('click',() => { 
@@ -241,11 +252,11 @@ arrowLeft.addEventListener('click',() => {
       }
     }
 
-  // ---------------------------------------------------------------- /
 // Code pour l'ajout de photo // 
 
 const imageUploadform = document.getElementById("imageUploadform");
 const fileInputElement = document.getElementById('file');
+
 const titreInput = document.getElementById('titre');
 const categorieSelect = document.getElementById('categorie');
 const validerBtn = document.getElementById('modalBtnColor');
@@ -254,6 +265,7 @@ const errorMessages = {
   titre: document.getElementById('errorTitre'),
   categorie: document.getElementById('errorCategorie'),
 };
+
 
 fileInputElement.addEventListener("input", validateForm);
 titreInput.addEventListener("input", validateForm);
@@ -270,9 +282,11 @@ function validateForm() {
 
   if (isFormValid) {
     validerBtn.style.backgroundColor = '#1d6154';
+    validerBtn.style.border = '1px solid #1d6154'
   } else {
     validerBtn.style.backgroundColor = ''; 
   }
+  return true;
 }
 
 function validateField(fieldName, value) {
@@ -325,38 +339,45 @@ imageUploadform.addEventListener('submit', (e) => {
         }
       })
       .then(function (data) {
-        projets.push(data);
+        console.log(data);
+        projets.unshift(data);
         afficherProjetsDansGalerie(projets);
       })
+
       .catch(error => console.log(error));
-  
+
 });
 
-// Fonction pour prévisualiser l'image
+// Fonction pour prévisualiser l'image // 
+
 function previewPicture(fileInputElement) {
   const preview = document.getElementById('previewImage');
+  const elementsToHide = document.querySelectorAll('.hide-on-preview');
+  const imageToHide = document.querySelector('.hide-image');
 
   fileInputElement.addEventListener('change', function () {
     const file = fileInputElement.files[0];
 
-    if (file) {
+    if (file) {  
+      imageToHide.classList.remove('hidden');
+      elementsToHide.forEach(element => element.classList.add('hidden'));
       const reader = new FileReader();
-
+      
       reader.onload = function (e) {
         // Affiche l'image prévisualisée en remplaçant l'attribut src de l'élément img
         preview.src = e.target.result;
+      
       };
 
       // Lit le fichier en tant que data URL
-      reader.readAsDataURL(file);
-
-      // Affiche l'élément previewImage
-      preview.classList.remove('hidden');
-    } else {
-      // Masque l'élément previewImage s'il n'y a pas d'image
-      preview.classList.add('hidden');
+      reader.readAsDataURL(file); 
+    }
+    else {
+      imageToHide.classList.add('hidden');
+        // Retire la classe pour rétablir les éléments après la prévisualisation
+        elementsToHide.forEach(element => element.classList.remove('hidden'));
     }
   });
 }
-
+// Appelle la fonction avec le bon élément input file
 previewPicture(fileInputElement);

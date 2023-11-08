@@ -227,6 +227,7 @@ arrowLeft.addEventListener('click',() => {
   // Fonction pour supprimer un projet
 
     async function deleteProjet(idProjet) {
+    
       try {
         const response = await fetch(`http://localhost:5678/api/works/${idProjet}`, {
           method: 'DELETE',
@@ -340,7 +341,7 @@ imageUploadform.addEventListener('submit', (e) => {
       })
       .then(function (data) {
         console.log(data);
-        projets.unshift(data);
+        projets = [data, ...projets];
         afficherProjetsDansGalerie(projets);
       })
 

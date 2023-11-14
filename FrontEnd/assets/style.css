@@ -154,7 +154,7 @@ header {
 }
 
 section {
-  margin: 50px 0;
+  margin: 100px 0;
 }
 
 h1 {
@@ -170,6 +170,7 @@ h1 > span {
   font-family: "Work Sans";
   font-size: 10px;
   letter-spacing: 0.1em;
+  padding-top: 5px;
 }
 
 h2 {
@@ -184,7 +185,7 @@ nav ul {
   list-style-type: none;
 }
 nav li {
-  padding: 0 10px;
+  padding: 0 20px;
   font-size: 1.2em;
   cursor: pointer;
   font-weight: 400;
@@ -192,6 +193,13 @@ nav li {
 li:hover {
   font-weight: 600;
 }
+
+nav img {
+  width: 22px;
+  height: 22px;
+  font-weight: 600;
+}
+
 a {
   color: black;
   text-decoration: none;
@@ -213,6 +221,7 @@ a {
 }
 
 #introduction article {
+  max-width: 404px;
   flex: 1;
 }
 #introduction h2 {
@@ -221,6 +230,8 @@ a {
 
 #introduction p {
   margin-bottom: 0.5em;
+  color: #3d3d3d;
+  line-height: normal;
 }
 #portfolio h2 {
   text-align: center;
@@ -255,7 +266,7 @@ a {
 }
 
 #contact input {
-  height: 50px;
+  height: 51px;
   font-size: 1.2em;
   border: none;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
@@ -283,10 +294,14 @@ input[type="submit"]:hover {
   background-color: #0e2f28;
 }
 
+footer {
+  background-color: white;
+}
+
 footer nav ul {
   display: flex;
   justify-content: flex-end;
-  margin: 2em;
+  padding: 2em;
 }
 
 .center {
@@ -298,7 +313,7 @@ footer nav ul {
   font-family: "Syne";
   font-weight: 700;
   color: #1d6154;
-  background-color: white;
+  background: #fffef8;
   margin: 2em auto;
   height: 37px;
   border-radius: 60px;
@@ -534,4 +549,34 @@ input[type="file"] {
 
 .hidden {
   display: none;
+}
+
+#errorContainer {
+  text-align: center;
+  color: #b1663c;
+}
+
+.error-message {
+  text-align: center;
+  color: #b1663c;
+}
+
+/* CSS de la page login */
+
+.footer-position {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  right: 50px;
+}
+#passwordError {
+  margin-top: 10px;
+  text-align: center;
+  color: #b1663c;
+}
+#emailError {
+  margin-top: 10px;
+  text-align: center;
+  color: #b1663c;
 }

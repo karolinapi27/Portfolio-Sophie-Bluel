@@ -2,6 +2,8 @@ let categories = [];
 let projets = [];
 
 const token = localStorage.getItem('token');
+const imageUploadform = document.getElementById("imageUploadform");
+const fileContainer = document.getElementById('fileContainer');
 
   // Fonction pour récupérer les projets
   async function recupererProjets() {
@@ -14,12 +16,13 @@ const token = localStorage.getItem('token');
       projets = await reponse.json();
       console.log(reponse);
 
-      // Affiche les projets dans la gallerie
-      afficherProjetsDansGalerie(projets)
-
       //fonction pour récupérer les catégories
       await recupererCategories();
       creerFiltres();
+
+      // Affiche les projets dans la gallerie
+      afficherProjetsDansGalerie(projets);
+      afficherProjetsDansModal(projets);
 
       console.log(projets);
 
@@ -146,7 +149,7 @@ const dialog = document.getElementById('modal');
 function openDialog() {  
   dialog.showModal(); 
   afficherProjetsDansModal(projets);
-  closeDialog2();
+  closeDialog2(); 
 }
   
 // Fonction pour fermer la modale 
@@ -160,7 +163,7 @@ const modal = document.querySelector('dialog');
 modal.addEventListener('click', function(event) {
  
   if (event.target === modal && modal.hasAttribute('open')) {
-      modal.close();
+      modal.close();  
   }
 });
 
@@ -179,10 +182,11 @@ btnAjouterUnePhoto.addEventListener('click',() => {
 function openDialog2() {
   const modal2 = document.getElementById('modal2');
   modal2.style.display = 'block';
+  
 }
 function closeDialog2(){
   document.getElementById('modal1').style.display = 'grid';
-  document.getElementById('modal2').style.display = 'none';
+  document.getElementById('modal2').style.display = 'none'; 
 };
 
 // Fonction pour retourner sur la suppression de photo "modal 1"
@@ -219,8 +223,7 @@ arrowLeft.addEventListener('click',() => {
         container.appendChild(image);
         container.appendChild(trash);
         figure.appendChild(container);
-        modalContent.appendChild(figure);
-
+        modalContent.appendChild(figure); 
       });
       };
 
@@ -242,20 +245,21 @@ arrowLeft.addEventListener('click',() => {
 
         // Supprime l'élément du DOM après suppression réussie
         const projetToDelete = document.querySelector(`[data-id="${idProjet}"]`);
+
         if (projetToDelete) {
           projetToDelete.remove();
+          afficherProjetsDansGalerie(projets);
+          afficherProjetsDansModal(projets);
         }
-
         console.log(`Projet supprimé avec succès.`);
-
+        
+        await recupererProjets();
       } catch (erreur) {
         console.error('Erreur lors de la suppression du projet :', erreur.message);
       }
     }
 
 // Code pour l'ajout de photo // 
-
-const imageUploadform = document.getElementById("imageUploadform");
 const fileInputElement = document.getElementById('file');
 
 const titreInput = document.getElementById('titre');
@@ -266,7 +270,6 @@ const errorMessages = {
   titre: document.getElementById('errorTitre'),
   categorie: document.getElementById('errorCategorie'),
 };
-
 
 fileInputElement.addEventListener("input", validateForm);
 titreInput.addEventListener("input", validateForm);
@@ -283,9 +286,10 @@ function validateForm() {
 
   if (isFormValid) {
     validerBtn.style.backgroundColor = '#1d6154';
-    validerBtn.style.border = '1px solid #1d6154'
+    validerBtn.style.border = '1px solid #1d6154';
   } else {
     validerBtn.style.backgroundColor = ''; 
+    validerBtn.style.border = '';
   }
   return true;
 }
@@ -300,21 +304,22 @@ function validateFile() {
   const maxSizeInBytes = 4 * 1024 * 1024; // 4MB
   const validFormats = ['image/jpeg', 'image/png'];
   const file = fileInputElement.files[0];
+  const errorContainer = document.getElementById('errorContainer');
 
   if (!file) {
     return false;
   }
 
   if (!validFormats.includes(file.type)) {
-    alert('Le format de l\'image doit être JPG ou PNG.');
-    return false;
+    errorContainer.textContent = 'Le format de l\'image doit être JPG ou PNG.';
+    return false;  
   }
 
   if (file.size > maxSizeInBytes) {
-    alert('La taille de l\'image ne doit pas dépasser 4 Mo.');
+    errorContainer.textContent = 'La taille de l\'image ne doit pas dépasser 4 Mo.';
     return false;
   }
-
+  errorContainer.textContent = '';
   return true;
 }
 
@@ -322,6 +327,7 @@ imageUploadform.addEventListener('submit', (e) => {
   e.preventDefault();
 
     const formData = new FormData(imageUploadform);
+    console.log(formData);
 
     fetch('http://localhost:5678/api/works', {
       method: "POST",
@@ -341,42 +347,51 @@ imageUploadform.addEventListener('submit', (e) => {
       })
       .then(function (data) {
         console.log(data);
-        projets = [data, ...projets];
+        projets.push(data);
         afficherProjetsDansGalerie(projets);
+        afficherProjetsDansModal(projets);
       })
-
       .catch(error => console.log(error));
 
 });
 
 // Fonction pour prévisualiser l'image // 
-
 function previewPicture(fileInputElement) {
   const preview = document.getElementById('previewImage');
+  const errorContainer = document.getElementById('errorContainer');
   const elementsToHide = document.querySelectorAll('.hide-on-preview');
   const imageToHide = document.querySelector('.hide-image');
 
   fileInputElement.addEventListener('change', function () {
     const file = fileInputElement.files[0];
 
-    if (file) {  
+    if (file) {
+      // Efface les erreurs lorsqu'une nouvelle image est sélectionnée
+      errorContainer.textContent = '';
+
+      // Vérifie le format de l'image
+      if (!validateFile()) {
+        // Si le format est incorrect, ne charge pas l'aperçu et ne modifie pas le fileContainer
+        return;
+      }
+
       imageToHide.classList.remove('hidden');
       elementsToHide.forEach(element => element.classList.add('hidden'));
       const reader = new FileReader();
-      
+
       reader.onload = function (e) {
         // Affiche l'image prévisualisée en remplaçant l'attribut src de l'élément img
         preview.src = e.target.result;
-      
       };
 
       // Lit le fichier en tant que data URL
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
     else {
+      // Si aucune image n'est sélectionnée, réinitialise le fileContainer
       imageToHide.classList.add('hidden');
-        // Retire la classe pour rétablir les éléments après la prévisualisation
-        elementsToHide.forEach(element => element.classList.remove('hidden'));
+      elementsToHide.forEach(element => element.classList.remove('hidden'));
+      fileContainer.reset(); // Réinitialise le champ de fichier
     }
   });
 }

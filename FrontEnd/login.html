@@ -15,7 +15,7 @@
   </head>
   <body>
     <header>
-      <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+      <h1>Sophie Bluel <span>ARCHITECTE D'INTÉRIEUR</span></h1>
       <nav>
         <ul>
           <li><a href="./index.html">projets</a></li>
@@ -30,10 +30,12 @@
         <h2>Log In</h2>
 
         <form id="LoginForm" action="#" method="post">
-          <label for="email">E-mail</label>
-          <input type="email" name="email" id="email" />
+          <label class="custom-title" for="email">E-mail</label>
+          <input class="custom-input" type="email" name="email" id="email" />
+          <span id="emailError"></span>
           <label for="password">Mot de passe</label>
           <input type="password" name="password" id="password" />
+          <span id="passwordError"></span>
           <input type="submit" value="Se connecter" />
           <p class="center">
             <a href="/forgot-password">Mot de passe oublié?</a>
@@ -44,7 +46,7 @@
 
     <footer>
       <nav>
-        <ul>
+        <ul class="footer-position">
           <li>Mentions Légales</li>
         </ul>
       </nav>

@@ -14,17 +14,14 @@ const fileContainer = document.getElementById('fileContainer');
       }
       // Conversion de la réponse JSON
       projets = await reponse.json();
-      console.log(reponse);
 
       //fonction pour récupérer les catégories
       await recupererCategories();
       creerFiltres();
 
-      // Affiche les projets dans la gallerie
+      // Affiche les projets dans la galerie
       afficherProjetsDansGalerie(projets);
       afficherProjetsDansModal(projets);
-
-      console.log(projets);
 
       // Met à jour la logique du bouton "Tous" pour réagir aux nouveaux projets
       boutonTous.addEventListener('click', () => afficherTousLesTravaux());
@@ -85,7 +82,6 @@ const fileContainer = document.getElementById('fileContainer');
       });
     
       afficherProjetsDansGalerie(projetsFiltres);
-      console.log("Filtrer par catégorie :", categorie);
     }
     
     // Fonction pour créer les filtres // 
@@ -109,7 +105,6 @@ const fileContainer = document.getElementById('fileContainer');
         bouton.classList.add('filter-button');
         bouton.addEventListener('click', () => filtrerParCategorie(categorie));
         filtersContainer.appendChild(bouton);
-        console.log ("Bouton cliqué");
       }); 
 
     // Ajoute un gestionnaire d'événements de clic à chaque filtre
@@ -118,15 +113,16 @@ const fileContainer = document.getElementById('fileContainer');
           button.addEventListener('click', () => toggleButtonColor(button));
         });
 
-        // Fonction pour le changement de couleur du bouton
+    // Fonction pour le changement de couleur du bouton
         function toggleButtonColor(clickedButton) {
-          filterButtons.forEach(button => {
-            button.classList.remove('clicked');
-          });
-          clickedButton.classList.toggle('clicked');
+        filterButtons.forEach(button => {
+        button.classList.remove('clicked');
+        });
+        clickedButton.classList.toggle('clicked');
         }
 
     }
+
     // Ajoute manuellement le bouton "Tous"
     const boutonTous = document.createElement('button');
     boutonTous.textContent = 'Tous';
@@ -136,14 +132,12 @@ const fileContainer = document.getElementById('fileContainer');
 
     // Fonction pour afficher tous les travaux 
     function afficherTousLesTravaux() {
-      // Affiche tous les projets dans la galerie
-      afficherProjetsDansGalerie(projets);
-      console.log("Afficher tous les travaux");
+    // Affiche tous les projets dans la galerie
+    afficherProjetsDansGalerie(projets);
     }
     
   // ---------------------------------------------------------------- //
 // Fonction pour ouvrir la modale 1
-
 const dialog = document.getElementById('modal');
 
 function openDialog() {  
@@ -177,19 +171,21 @@ btnAjouterUnePhoto.addEventListener('click',() => {
   openDialog2();
 });
 
-// Fonction pour ouvrir la deuxième partie de la modale
+// Fonction pour ouvrir la deuxième partie de la modale qui gère l'ajout de photo
+const modal2 = document.getElementById('modal2');
+const modalform2 = document.getElementById('imageUploadform');
 
-function openDialog2() {
-  const modal2 = document.getElementById('modal2');
-  modal2.style.display = 'block';
-  
+function openDialog2() { 
+  modal2.style.display = 'block'; 
 }
+
 function closeDialog2(){
   document.getElementById('modal1').style.display = 'grid';
   document.getElementById('modal2').style.display = 'none'; 
+  modalform2.reset();
 };
 
-// Fonction pour retourner sur la suppression de photo "modal 1"
+// Fonction pour retourner sur la suppression de photo "modal 1" avec la flèche
 const arrowLeft = document.querySelector('.modal2-arrow');
 
 arrowLeft.addEventListener('click',() => { 
@@ -197,7 +193,7 @@ arrowLeft.addEventListener('click',() => {
   document.getElementById('modal2').style.display = 'none';
 });
 
-  // Code de la Modale pour supprimer des projets //
+  // Code de la Modale pour la suppression de projets //
 
     function afficherProjetsDansModal(projets) {
       const modalContent = document.querySelector('.modalContent');
@@ -212,7 +208,6 @@ arrowLeft.addEventListener('click',() => {
         container.classList.add('imageContainer');
         
         trash.classList.add('fa-solid', 'fa-trash-can', 'trash');
-
 
         // Gestionnaire d'événements pour la poubelle
         trash.addEventListener('click', () => deleteProjet(projet.id));
@@ -260,6 +255,8 @@ arrowLeft.addEventListener('click',() => {
     }
 
 // Code pour l'ajout de photo // 
+
+// Sélection des éléments du DOM
 const fileInputElement = document.getElementById('file');
 
 const titreInput = document.getElementById('titre');
@@ -271,19 +268,25 @@ const errorMessages = {
   categorie: document.getElementById('errorCategorie'),
 };
 
+// Ajout d'écouteurs d'événements sur les champs du formulaire
 fileInputElement.addEventListener("input", validateForm);
 titreInput.addEventListener("input", validateForm);
 categorieSelect.addEventListener("input", validateForm);
 
+// Fonction de validation du formulaire
 function validateForm() {
+// Validation individuelle de chaque champ
   const isFileValid = validateFile();
   const isTitleValid = validateField('titre', titreInput.value);
   const isCategoryValid = validateField('categorie', categorieSelect.value);
 
+// Vérification globale de la validité du formulaire
   const isFormValid = isFileValid && isTitleValid && isCategoryValid;
 
+//Désactivation ou activation du bouton de validation en fonction de la validité du formulaire
   validerBtn.disabled = !isFormValid;
 
+// Mise en forme visuelle du bouton en fonction de la validité du formulaire
   if (isFormValid) {
     validerBtn.style.backgroundColor = '#1d6154';
     validerBtn.style.border = '1px solid #1d6154';
@@ -294,41 +297,49 @@ function validateForm() {
   return true;
 }
 
+// Fonction de validation d'un champ texte
 function validateField(fieldName, value) {
   const errorMessage = errorMessages[fieldName];
-  errorMessage.textContent = value.trim() === '' ? `Le champ de ${fieldName} est requis` : '';
+  // Vérifie si le champ est vide
+  errorMessage.textContent = value.trim() === '' ? `Le champ de ${fieldName} est requis` : ''; 
+  // Renvoie true si le champ n'est pas vide, false sinon
   return value.trim() !== '';
 }
-
+// Fonction de validation du champ de fichier (photo)
 function validateFile() {
+  // Définition des contraintes pour le fichier
   const maxSizeInBytes = 4 * 1024 * 1024; // 4MB
   const validFormats = ['image/jpeg', 'image/png'];
+  // Récupération du fichier depuis l'input file
   const file = fileInputElement.files[0];
   const errorContainer = document.getElementById('errorContainer');
 
+  // Vérification si un fichier est sélectionné
   if (!file) {
     return false;
   }
-
+  // Vérification du format du fichier
   if (!validFormats.includes(file.type)) {
     errorContainer.textContent = 'Le format de l\'image doit être JPG ou PNG.';
     return false;  
   }
-
+  // Vérification de la taille du fichier
   if (file.size > maxSizeInBytes) {
     errorContainer.textContent = 'La taille de l\'image ne doit pas dépasser 4 Mo.';
     return false;
   }
+  // Réinitialisation du message d'erreur en cas de succès
   errorContainer.textContent = '';
   return true;
 }
 
+// Écouteur d'événement sur la soumission du formulaire d'envoi d'images
 imageUploadform.addEventListener('submit', (e) => {
   e.preventDefault();
-
+    // Crée un objet FormData à partir du formulaire
     const formData = new FormData(imageUploadform);
-    console.log(formData);
 
+    // Envoie la requête POST pour ajouter l'image au serveur
     fetch('http://localhost:5678/api/works', {
       method: "POST",
       headers: {
@@ -337,8 +348,9 @@ imageUploadform.addEventListener('submit', (e) => {
       body: formData,
     })
       .then(function (response) {
+        // Gère la réponse du serveur
         if (response.ok) {
-          alert('Données envoyées');
+          alert("L'image a bien été ajoutée");
           return response.json();
         } else {
           console.error(response);
@@ -347,7 +359,7 @@ imageUploadform.addEventListener('submit', (e) => {
       })
       .then(function (data) {
         console.log(data);
-        projets.push(data);
+        projets.push(data); // Ajoute les données à un tableau (projets)
         afficherProjetsDansGalerie(projets);
         afficherProjetsDansModal(projets);
       })
@@ -362,6 +374,7 @@ function previewPicture(fileInputElement) {
   const elementsToHide = document.querySelectorAll('.hide-on-preview');
   const imageToHide = document.querySelector('.hide-image');
 
+  // Écouteur d'événement sur le changement de fichier dans l'input file
   fileInputElement.addEventListener('change', function () {
     const file = fileInputElement.files[0];
 
@@ -374,16 +387,16 @@ function previewPicture(fileInputElement) {
         // Si le format est incorrect, ne charge pas l'aperçu et ne modifie pas le fileContainer
         return;
       }
-
+      // Affiche les éléments nécessaires pendant la prévisualisation
       imageToHide.classList.remove('hidden');
       elementsToHide.forEach(element => element.classList.add('hidden'));
       const reader = new FileReader();
 
+      // Événement déclenché lorsque la lecture du fichier est terminée
       reader.onload = function (e) {
         // Affiche l'image prévisualisée en remplaçant l'attribut src de l'élément img
         preview.src = e.target.result;
       };
-
       // Lit le fichier en tant que data URL
       reader.readAsDataURL(file);
     }
@@ -391,7 +404,6 @@ function previewPicture(fileInputElement) {
       // Si aucune image n'est sélectionnée, réinitialise le fileContainer
       imageToHide.classList.add('hidden');
       elementsToHide.forEach(element => element.classList.remove('hidden'));
-      fileContainer.reset(); // Réinitialise le champ de fichier
     }
   });
 }

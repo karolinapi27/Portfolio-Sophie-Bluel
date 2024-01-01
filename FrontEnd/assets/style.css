@@ -184,12 +184,14 @@ nav ul {
   align-items: center;
   list-style-type: none;
 }
+
 nav li {
   padding: 0 20px;
   font-size: 1.2em;
   cursor: pointer;
   font-weight: 400;
 }
+
 li:hover {
   font-weight: 600;
 }
@@ -203,6 +205,7 @@ nav img {
 a {
   color: black;
   text-decoration: none;
+  text-transform: lowercase;
 }
 .bold {
   font-weight: 600;
@@ -292,10 +295,6 @@ input[type="submit"] {
 }
 input[type="submit"]:hover {
   background-color: #0e2f28;
-}
-
-footer {
-  background-color: white;
 }
 
 footer nav ul {
@@ -570,11 +569,13 @@ input[type="file"] {
   margin: 0;
   right: 50px;
 }
+
 #passwordError {
   margin-top: 10px;
   text-align: center;
   color: #b1663c;
 }
+
 #emailError {
   margin-top: 10px;
   text-align: center;
